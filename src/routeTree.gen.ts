@@ -9,38 +9,258 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TermsRouteImport } from './routes/terms'
+import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as SafetyRouteImport } from './routes/safety'
+import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as PricingRouteImport } from './routes/pricing'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AppRouteImport } from './routes/app'
+import { Route as AcceptableUseRouteImport } from './routes/acceptable-use'
+import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppIndexRouteImport } from './routes/app/index'
+import { Route as PersonasPersonaIdRouteImport } from './routes/personas.$personaId'
+import { Route as ChatPersonaIdRouteImport } from './routes/chat.$personaId'
 
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SafetyRoute = SafetyRouteImport.update({
+  id: '/safety',
+  path: '/safety',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PricingRoute = PricingRouteImport.update({
+  id: '/pricing',
+  path: '/pricing',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppRoute = AppRouteImport.update({
+  id: '/app',
+  path: '/app',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AcceptableUseRoute = AcceptableUseRouteImport.update({
+  id: '/acceptable-use',
+  path: '/acceptable-use',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppIndexRoute = AppIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppRoute,
+} as any)
+const PersonasPersonaIdRoute = PersonasPersonaIdRouteImport.update({
+  id: '/personas/$personaId',
+  path: '/personas/$personaId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ChatPersonaIdRoute = ChatPersonaIdRouteImport.update({
+  id: '/chat/$personaId',
+  path: '/chat/$personaId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/acceptable-use': typeof AcceptableUseRoute
+  '/app': typeof AppRouteWithChildren
+  '/auth': typeof AuthRoute
+  '/pricing': typeof PricingRoute
+  '/privacy': typeof PrivacyRoute
+  '/safety': typeof SafetyRoute
+  '/settings': typeof SettingsRoute
+  '/terms': typeof TermsRoute
+  '/chat/$personaId': typeof ChatPersonaIdRoute
+  '/personas/$personaId': typeof PersonasPersonaIdRoute
+  '/app/': typeof AppIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/acceptable-use': typeof AcceptableUseRoute
+  '/auth': typeof AuthRoute
+  '/pricing': typeof PricingRoute
+  '/privacy': typeof PrivacyRoute
+  '/safety': typeof SafetyRoute
+  '/settings': typeof SettingsRoute
+  '/terms': typeof TermsRoute
+  '/chat/$personaId': typeof ChatPersonaIdRoute
+  '/personas/$personaId': typeof PersonasPersonaIdRoute
+  '/app': typeof AppIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/acceptable-use': typeof AcceptableUseRoute
+  '/app': typeof AppRouteWithChildren
+  '/auth': typeof AuthRoute
+  '/pricing': typeof PricingRoute
+  '/privacy': typeof PrivacyRoute
+  '/safety': typeof SafetyRoute
+  '/settings': typeof SettingsRoute
+  '/terms': typeof TermsRoute
+  '/chat/$personaId': typeof ChatPersonaIdRoute
+  '/personas/$personaId': typeof PersonasPersonaIdRoute
+  '/app/': typeof AppIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/acceptable-use'
+    | '/app'
+    | '/auth'
+    | '/pricing'
+    | '/privacy'
+    | '/safety'
+    | '/settings'
+    | '/terms'
+    | '/chat/$personaId'
+    | '/personas/$personaId'
+    | '/app/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/about'
+    | '/acceptable-use'
+    | '/auth'
+    | '/pricing'
+    | '/privacy'
+    | '/safety'
+    | '/settings'
+    | '/terms'
+    | '/chat/$personaId'
+    | '/personas/$personaId'
+    | '/app'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/acceptable-use'
+    | '/app'
+    | '/auth'
+    | '/pricing'
+    | '/privacy'
+    | '/safety'
+    | '/settings'
+    | '/terms'
+    | '/chat/$personaId'
+    | '/personas/$personaId'
+    | '/app/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AboutRoute: typeof AboutRoute
+  AcceptableUseRoute: typeof AcceptableUseRoute
+  AppRoute: typeof AppRouteWithChildren
+  AuthRoute: typeof AuthRoute
+  PricingRoute: typeof PricingRoute
+  PrivacyRoute: typeof PrivacyRoute
+  SafetyRoute: typeof SafetyRoute
+  SettingsRoute: typeof SettingsRoute
+  TermsRoute: typeof TermsRoute
+  ChatPersonaIdRoute: typeof ChatPersonaIdRoute
+  PersonasPersonaIdRoute: typeof PersonasPersonaIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/safety': {
+      id: '/safety'
+      path: '/safety'
+      fullPath: '/safety'
+      preLoaderRoute: typeof SafetyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pricing': {
+      id: '/pricing'
+      path: '/pricing'
+      fullPath: '/pricing'
+      preLoaderRoute: typeof PricingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/app': {
+      id: '/app'
+      path: '/app'
+      fullPath: '/app'
+      preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/acceptable-use': {
+      id: '/acceptable-use'
+      path: '/acceptable-use'
+      fullPath: '/acceptable-use'
+      preLoaderRoute: typeof AcceptableUseRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,22 +268,63 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/app/': {
+      id: '/app/'
+      path: '/'
+      fullPath: '/app/'
+      preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/personas/$personaId': {
+      id: '/personas/$personaId'
+      path: '/personas/$personaId'
+      fullPath: '/personas/$personaId'
+      preLoaderRoute: typeof PersonasPersonaIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/chat/$personaId': {
+      id: '/chat/$personaId'
+      path: '/chat/$personaId'
+      fullPath: '/chat/$personaId'
+      preLoaderRoute: typeof ChatPersonaIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
+interface AppRouteChildren {
+  AppIndexRoute: typeof AppIndexRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppIndexRoute: AppIndexRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AboutRoute: AboutRoute,
+  AcceptableUseRoute: AcceptableUseRoute,
+  AppRoute: AppRouteWithChildren,
+  AuthRoute: AuthRoute,
+  PricingRoute: PricingRoute,
+  PrivacyRoute: PrivacyRoute,
+  SafetyRoute: SafetyRoute,
+  SettingsRoute: SettingsRoute,
+  TermsRoute: TermsRoute,
+  ChatPersonaIdRoute: ChatPersonaIdRoute,
+  PersonasPersonaIdRoute: PersonasPersonaIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
 
 import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
+import type { createStart } from '@tanstack/react-start'
 declare module '@tanstack/react-start' {
   interface Register {
     ssr: true
     router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
   }
 }
