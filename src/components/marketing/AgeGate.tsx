@@ -1,0 +1,88 @@
+import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Wordmark } from "@/components/brand/Wordmark";
+
+const STORAGE_KEY = "callmeai_age_verified";
+
+/**
+ * Lightweight 18+ confirmation. NOT identity verification — the standard
+ * pattern for the reference sites. Stored in localStorage so the gate
+ * doesn't repeat on every page. Required before the marketing site reveals
+ * personas, pricing, or any CTA into /auth.
+ */
+export function AgeGate({ children }: { children: React.ReactNode }) {
+  const [verified, setVerified] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    try {
+      setVerified(localStorage.getItem(STORAGE_KEY) === "1");
+    } catch {
+      setVerified(true);
+    }
+  }, []);
+
+  if (verified === null) {
+    return (
+      <div className="flex min-h-dvh items-center justify-center bg-background">
+        <div className="size-6 animate-spin rounded-full border-2 border-border border-t-primary" />
+      </div>
+    );
+  }
+
+  if (verified) return <>{children}</>;
+
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-background/95 px-4 backdrop-blur-md">
+      <div className="w-full max-w-md rounded-2xl border border-border bg-card p-8 text-center shadow-2xl">
+        <div className="mb-6 flex justify-center">
+          <Wordmark size="lg" />
+        </div>
+        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">
+          Age verification
+        </p>
+        <h1 className="mt-2 font-serif text-2xl text-foreground">
+          Are you 18 or older?
+        </h1>
+        <p className="mt-3 text-sm text-muted-foreground">
+          Call Me AI is a social companion for adults. You must be 18 or older
+          to enter.
+        </p>
+        <div className="mt-6 flex flex-col gap-2">
+          <Button
+            size="lg"
+            className="w-full rounded-full"
+            onClick={() => {
+              try {
+                localStorage.setItem(STORAGE_KEY, "1");
+              } catch {}
+              setVerified(true);
+            }}
+          >
+            Yes, I'm 18 or older
+          </Button>
+          <Button
+            variant="ghost"
+            size="lg"
+            className="w-full rounded-full text-muted-foreground"
+            onClick={() => {
+              window.location.href = "https://www.google.com";
+            }}
+          >
+            I'm under 18
+          </Button>
+        </div>
+        <p className="mt-6 text-[11px] text-muted-foreground">
+          By entering, you agree to our{" "}
+          <a href="/terms" className="underline">
+            Terms
+          </a>{" "}
+          and{" "}
+          <a href="/privacy" className="underline">
+            Privacy Policy
+          </a>
+          .
+        </p>
+      </div>
+    </div>
+  );
+}
