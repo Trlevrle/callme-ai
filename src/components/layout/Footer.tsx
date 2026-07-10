@@ -4,8 +4,8 @@ const footerLinks = [
   {
     title: "Product",
     items: [
-      { label: "Personas", href: "/#personas" },
-      { label: "How it works", href: "/#how" },
+      { label: "Overview", href: "/" },
+      { label: "Features", href: "/about" },
       { label: "Pricing", href: "/pricing" },
     ],
   },
@@ -22,6 +22,7 @@ const footerLinks = [
     items: [
       { label: "Terms of service", href: "/terms" },
       { label: "Privacy", href: "/privacy" },
+      { label: "Refund policy", href: "/refund-policy" },
       { label: "Acceptable use", href: "/acceptable-use" },
     ],
   },
@@ -36,8 +37,8 @@ export function Footer() {
           <div className="space-y-4">
             <Wordmark size="md" />
             <p className="max-w-xs text-sm text-muted-foreground">
-              Call Me AI is a real-time AI companion you can talk to. Pick a
-              persona, hit call, and have a conversation.
+              Call Me AI is a private AI companion and personal voice assistant focused on
+              meaningful, always-available conversation.
             </p>
           </div>
 
@@ -64,7 +65,7 @@ export function Footer() {
 
         <div className="mt-12 flex flex-col items-start justify-between gap-4 border-t border-border/60 pt-6 text-xs text-muted-foreground md:flex-row md:items-center">
           <span>© {year} Call Me AI. All rights reserved.</span>
-          <span>Made for people who want a real conversation.</span>
+          <span>Built for private and reliable conversation experiences.</span>
         </div>
       </div>
     </footer>

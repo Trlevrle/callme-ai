@@ -1,5 +1,5 @@
-import { ClientOnly } from '@tanstack/react-router'
-import type { ReactNode } from 'react'
+import { ClientOnly } from "@tanstack/react-router";
+import type { ReactNode } from "react";
 
 /**
  * SSR-safe boundary. Every route in this template is SERVER-RENDERED / prerendered
@@ -21,8 +21,8 @@ export function BlinkClientBoundary({
   children,
   fallback = null,
 }: {
-  children: ReactNode
-  fallback?: ReactNode
+  children: ReactNode;
+  fallback?: ReactNode;
 }) {
-  return <ClientOnly fallback={fallback}>{children}</ClientOnly>
+  return <ClientOnly fallback={fallback}>{children}</ClientOnly>;
 }

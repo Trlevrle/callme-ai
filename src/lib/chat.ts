@@ -1,5 +1,7 @@
-import { blink } from "@/blink/client";
 import { getPersona } from "@/lib/personas";
+import { appLogger } from "@/lib/logger";
+import { buildPersonaPrompt } from "@/lib/persona-style";
+import { loadPreferences } from "@/lib/storage";
 
 export interface ChatMessage {
   id: string;
@@ -9,54 +11,110 @@ export interface ChatMessage {
   createdAt: string;
 }
 
-/**
- * Provider chain for text generation. The Blink SDK's generateText routes
- * through whichever provider is configured in the project's AI settings.
- * v1 uses Blink AI (OpenAI primary). v1.1 adds explicit OpenRouter +
- * fallback chains once the user drops the corresponding keys into
- * Blink secrets.
- */
-const PRIMARY_MODEL = "gpt-4.1-mini";
-const FALLBACK_MODEL = "gpt-4o-mini";
+function looksNsfw(text: string) {
+  return /\b(sex|sexual|nude|nudity|explicit|porn|erotic|fetish|bdsm|kinky|horny|nsfw|xxx|strip|masturbat|bondage)\b/i.test(
+    text,
+  );
+}
+
+async function postJson<T>(path: string, body: unknown): Promise<T> {
+  const controller = new AbortController();
+  const timeoutHandle = setTimeout(() => controller.abort(), 25000);
+
+  let response: Response;
+
+  try {
+    response = await fetch(path, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+      signal: controller.signal,
+    });
+  } catch (error) {
+    clearTimeout(timeoutHandle);
+    const isAbort = error instanceof DOMException && error.name === "AbortError";
+    appLogger.error({
+      scope: "chat-api",
+      event: isAbort ? "request-timeout" : "request-network-failure",
+      details: { path },
+    });
+    throw new Error(
+      isAbort
+        ? "The request took too long. Please try again."
+        : "Network connection failed. Please check your connection and retry.",
+    );
+  }
+
+  clearTimeout(timeoutHandle);
+
+  if (!response.ok) {
+    let message = "The assistant is taking a moment to recover.";
+    try {
+      const payload = await response.json();
+      message = payload?.message || payload?.error || message;
+    } catch {
+      message = await response.text();
+    }
+    appLogger.warn({
+      scope: "chat-api",
+      event: "request-not-ok",
+      details: { path, status: response.status, message },
+    });
+    throw new Error(message);
+  }
+
+  return response.json() as Promise<T>;
+}
+
+function toMessage(err: unknown, fallback: string): string {
+  if (err instanceof Error) {
+    return err.message || fallback;
+  }
+  return fallback;
+}
 
 export async function sendMessage(
   personaId: string,
   history: ChatMessage[],
   userMessage: string,
+  options?: { allowNsfwFallback?: boolean },
 ): Promise<ChatMessage> {
   const persona = getPersona(personaId);
   if (!persona) throw new Error("Unknown persona");
+  const preferences = loadPreferences();
+  const mergedSystemPrompt = buildPersonaPrompt(persona.systemPrompt, preferences.defaultTone);
 
-  // Build the message list with the persona system prompt prepended.
   const messages = [
-    { role: "system" as const, content: persona.systemPrompt },
+    { role: "system" as const, content: mergedSystemPrompt },
     ...history
       .filter((m) => m.role === "user" || m.role === "assistant")
       .map((m) => ({ role: m.role, content: m.content })),
     { role: "user" as const, content: userMessage },
   ];
 
-  // Try primary model, then fallback. The Blink SDK throws on 4xx/5xx;
-  // we catch and retry with the fallback model.
-  let reply = "";
-  let lastError: unknown = null;
-  for (const model of [PRIMARY_MODEL, FALLBACK_MODEL]) {
-    try {
-      const { text } = await blink.ai.generateText({
-        messages,
-        model,
-        maxTokens: 400,
-      });
-      reply = text;
-      break;
-    } catch (err) {
-      lastError = err;
-      // continue to next model
-    }
+  const allowNsfwFallback = Boolean(options?.allowNsfwFallback);
+  const adultTopicsModeEnabled = allowNsfwFallback;
+  const shouldUseNsfwMode =
+    allowNsfwFallback && (looksNsfw(userMessage) || looksNsfw(persona.systemPrompt));
+
+  let payload: { text?: string };
+  try {
+    payload = await postJson<{ text?: string }>("/api/chat", {
+      messages,
+      maxTokens: 400,
+      mode: shouldUseNsfwMode ? "nsfw" : "safe",
+      allowNsfwFallback,
+      adultTopicsModeEnabled,
+    });
+  } catch (err) {
+    throw new Error(
+      toMessage(err, "Your companion is taking a moment to recover. Please try again in a moment."),
+    );
   }
 
+  const reply = payload.text || "";
   if (!reply) {
-    throw lastError instanceof Error ? lastError : new Error("All models failed");
+    throw new Error("Your companion is taking a moment to recover. Please try again in a moment.");
   }
 
   return {
@@ -67,20 +125,27 @@ export async function sendMessage(
   };
 }
 
-/**
- * Generate an image in response to a prompt. Uses OpenAI gpt-image-1
- * via the Blink SDK. Returns the public URL of the generated image.
- */
-export async function generateImage(prompt: string): Promise<string> {
-  const { data, error } = await blink.ai.generateImage({
-    prompt,
-    model: "gpt-image-1",
-    size: "1024x1024",
-  });
-  if (error) {
-    throw new Error(error.message || "Image generation failed");
+export async function generateImage(
+  prompt: string,
+  options?: { allowNsfwFallback?: boolean },
+): Promise<string> {
+  const allowNsfwFallback = Boolean(options?.allowNsfwFallback);
+  const adultTopicsModeEnabled = allowNsfwFallback;
+  const mode = allowNsfwFallback && looksNsfw(prompt) ? "nsfw" : "safe";
+
+  try {
+    const payload = await postJson<{ url?: string }>("/api/image", {
+      prompt,
+      mode,
+      size: "1024x1024",
+      allowNsfwFallback,
+      adultTopicsModeEnabled,
+    });
+    if (payload.url) return payload.url;
+    throw new Error("No image URL returned");
+  } catch (err) {
+    throw new Error(
+      toMessage(err, "Your companion is taking a moment to recover. Please try again in a moment."),
+    );
   }
-  const first = Array.isArray(data) ? data[0] : data;
-  if (!first?.url) throw new Error("No image URL returned");
-  return first.url;
 }

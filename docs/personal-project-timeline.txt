@@ -1,0 +1,60 @@
+CALL ME AI - PERSONAL PROJECT TIMELINE
+Owner: Brani
+Period covered: Pre-launch development to current state
+Status: Active development
+
+1) How it started
+- Initial goal was to clarify where API keys belong and how to map OHAPI-compatible setup through OpenRouter-style variables.
+- Product direction then evolved into SFW-first routing with optional adult-capable fallback for eligible requests.
+- Requirement expanded to explicit and always-available user control called Adult topics mode.
+
+2) What was built so far
+A. Environment and provider foundation
+- Runtime env loading supports .env.local first, then .env.
+- Alias support added between VITE_ and server variable names.
+- Added extensive .env.example template for OpenRouter, FAL, fallback keys/models, and optional ElevenLabs entries.
+
+B. Chat and image orchestration
+- Frontend now posts mode and explicit adultTopicsModeEnabled flags for chat and image requests.
+- Backend chat and image endpoints implement multi-step fallback model/key chains.
+- Safe lane and adult-capable lane are separated by explicit routing conditions.
+- Added clear user-facing response when request requires Adult topics mode but it is disabled.
+
+C. Dev/runtime behavior alignment
+- Vite dev proxy now mirrors server behavior for chat/image fallback logic.
+- This prevents local-vs-runtime mismatch during QA.
+
+D. Preferences and persistence
+- Storage preference renamed to adultTopicsModeEnabled.
+- Backward-compatible migration from adaptiveRoutingEnabled included.
+- App-wide preference change event added so UI can sync state immediately.
+
+E. UX and controls
+- Adult topics mode switch added in Settings.
+- Adult topics mode switch added directly in Chat UI (desktop and mobile views).
+- Global status indicator added in AppShell so mode visibility is not chat-only.
+
+F. Legal/compliance product copy
+- Pricing updated with explicit Adult topics mode notice and links to policy pages.
+- Terms updated with dedicated Adult Topics Mode section.
+- Safety updated with explicit policy-gated Adult topics rule.
+- Refund Policy page added and linked.
+
+3) Why these decisions were made
+- SFW-first default lowers risk and improves baseline safety.
+- Explicit user control avoids hidden policy behavior.
+- Multi-step fallback improves reliability under provider/model/key failures.
+- UI visibility of mode improves user trust and compliance clarity.
+- Preference migration avoids regressions for existing users.
+
+4) Current launch-critical priorities
+- Final end-to-end QA for fallback behavior and mode gating.
+- Payment integration completion and legal copy final pass.
+- Production env verification for primary and fallback credentials.
+- Final launch readiness checklist and incident response rehearsal.
+
+5) Open for final update at launch freeze
+- Payment integration specifics (provider, webhook states, retries, refunds).
+- Final production config values and backup rotation plan.
+- Final QA pass results and launch date record.
+- Post-launch monitoring and first-incident notes.

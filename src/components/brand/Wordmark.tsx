@@ -29,30 +29,16 @@ export function Wordmark({ size = "md", className, as = "span", href }: Wordmark
   const inner = (
     <>
       <span
-        className={cn(
-          "font-serif italic font-medium tracking-tight text-foreground",
-          dims.call,
-        )}
+        className={cn("font-serif italic font-medium tracking-tight text-foreground", dims.call)}
       >
         Call
       </span>
-      <HandsetMark
-        size={dims.mark}
-        className="mx-[0.18em] -translate-y-[0.05em] text-primary"
-      />
-      <span
-        className={cn(
-          "font-sans font-normal tracking-tight text-foreground",
-          dims.me,
-        )}
-      >
+      <HandsetMark size={dims.mark} className="mx-[0.18em] -translate-y-[0.05em] text-primary" />
+      <span className={cn("font-sans font-normal tracking-tight text-foreground", dims.me)}>
         Me
       </span>
       <span
-        className={cn(
-          "ml-1 font-serif italic font-medium tracking-tight text-primary",
-          dims.ai,
-        )}
+        className={cn("ml-1 font-serif italic font-medium tracking-tight text-primary", dims.ai)}
       >
         AI
       </span>
@@ -73,13 +59,7 @@ export function Wordmark({ size = "md", className, as = "span", href }: Wordmark
  * Telephone-handset glyph used in the wordmark. Stylized, not literal.
  * Sits on the text baseline and inherits `color` from the parent.
  */
-export function HandsetMark({
-  size = 18,
-  className,
-}: {
-  size?: number;
-  className?: string;
-}) {
+export function HandsetMark({ size = 18, className }: { size?: number; className?: string }) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -96,14 +76,8 @@ export function HandsetMark({
     >
       <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92Z" />
       {/* pulse rings — two concentric arcs that suggest "ringing" */}
-      <path
-        d="M17.5 4.5a6 6 0 0 1 2 4.5"
-        opacity="0.7"
-      />
-      <path
-        d="M20 2.5a10 10 0 0 1 2 6.5"
-        opacity="0.4"
-      />
+      <path d="M17.5 4.5a6 6 0 0 1 2 4.5" opacity="0.7" />
+      <path d="M20 2.5a10 10 0 0 1 2 6.5" opacity="0.4" />
     </svg>
   );
 }

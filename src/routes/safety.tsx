@@ -19,6 +19,11 @@ const rules = [
     body: "Call Me AI is an 18+ product. We do not allow any sexual, romantic, or otherwise intimate content involving minors in any context. Real or fictional. This is enforced at the content layer, the model layer, and the policy layer.",
   },
   {
+    icon: Shield,
+    title: "Adult topics mode is policy-gated",
+    body: "Adult topics mode is optional and can be toggled at any time. Enabling it does not bypass safety controls, legal restrictions, or provider policy checks. Requests that violate policy are blocked.",
+  },
+  {
     icon: Lock,
     title: "No real people without consent",
     body: "Personas at Call Me AI are fictional characters. We do not generate content that depicts real, named, or identifiable public figures in intimate contexts. We do not generate deepfake or impersonation content.",
@@ -41,8 +46,8 @@ function SafetyPage() {
           How we keep <em className="text-primary">Call Me AI</em> safe.
         </h1>
         <p className="mt-4 text-base text-muted-foreground">
-          Call Me AI is an 18+ social companion. We hold ourselves to a
-          specific safety standard, and we publish what it is.
+          Call Me AI is an 18+ AI companion platform. We hold ourselves to a specific safety
+          standard, and we publish what it is.
         </p>
 
         <div className="mt-10 space-y-4">
@@ -55,9 +60,7 @@ function SafetyPage() {
                 <r.icon className="size-5" />
               </div>
               <div>
-                <h2 className="font-serif text-lg text-foreground">
-                  {r.title}
-                </h2>
+                <h2 className="font-serif text-lg text-foreground">{r.title}</h2>
                 <p className="mt-1 text-sm text-muted-foreground">{r.body}</p>
               </div>
             </div>

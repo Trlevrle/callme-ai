@@ -1,6 +1,8 @@
-import { createFileRoute, Link, useParams } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate, useParams } from "@tanstack/react-router";
+import { useEffect } from "react";
 import { ArrowRight, Mic, MessageSquare, ImagePlus, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/hooks/useAuth";
 import { getPersona } from "@/lib/personas";
 import { cn } from "@/lib/utils";
 
@@ -9,8 +11,24 @@ export const Route = createFileRoute("/personas/$personaId")({
 });
 
 function PersonaDetail() {
+  const navigate = useNavigate();
+  const { isAuthenticated, isLoading } = useAuth();
   const { personaId } = useParams({ from: "/personas/$personaId" });
   const persona = getPersona(personaId);
+
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated) {
+      navigate({ to: "/auth?mode=signin" });
+    }
+  }, [isAuthenticated, isLoading, navigate]);
+
+  if (isLoading || !isAuthenticated) {
+    return (
+      <div className="grid min-h-dvh place-items-center bg-background">
+        <div className="size-6 animate-spin rounded-full border-2 border-border border-t-primary" />
+      </div>
+    );
+  }
 
   if (!persona) {
     return (
@@ -34,9 +52,7 @@ function PersonaDetail() {
             persona.accent,
           )}
         >
-          <span className="font-serif italic text-[12rem] text-foreground/40">
-            {persona.emoji}
-          </span>
+          <span className="font-serif italic text-[12rem] text-foreground/40">{persona.emoji}</span>
         </div>
 
         <div className="flex flex-col justify-center">
@@ -89,13 +105,7 @@ function PersonaDetail() {
   );
 }
 
-function Hint({
-  icon: Icon,
-  label,
-}: {
-  icon: typeof Mic;
-  label: string;
-}) {
+function Hint({ icon: Icon, label }: { icon: typeof Mic; label: string }) {
   return (
     <div className="flex items-center gap-1.5 rounded-lg border border-border/60 bg-card/40 px-2.5 py-2">
       <Icon className="size-3.5 text-primary" />

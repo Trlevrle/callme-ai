@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Wordmark } from "@/components/brand/Wordmark";
 
@@ -11,9 +11,12 @@ const STORAGE_KEY = "callmeai_age_verified";
  * personas, pricing, or any CTA into /auth.
  */
 export function AgeGate({ children }: { children: React.ReactNode }) {
-  const [verified, setVerified] = useState<boolean | null>(null);
+  const [verified, setVerified] = useState(false);
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
+    setIsClient(true);
+
     try {
       setVerified(localStorage.getItem(STORAGE_KEY) === "1");
     } catch {
@@ -21,12 +24,8 @@ export function AgeGate({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  if (verified === null) {
-    return (
-      <div className="flex min-h-dvh items-center justify-center bg-background">
-        <div className="size-6 animate-spin rounded-full border-2 border-border border-t-primary" />
-      </div>
-    );
+  if (!isClient) {
+    return <>{children}</>;
   }
 
   if (verified) return <>{children}</>;
@@ -40,12 +39,9 @@ export function AgeGate({ children }: { children: React.ReactNode }) {
         <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">
           Age verification
         </p>
-        <h1 className="mt-2 font-serif text-2xl text-foreground">
-          Are you 18 or older?
-        </h1>
+        <h1 className="mt-2 font-serif text-2xl text-foreground">Are you 18 or older?</h1>
         <p className="mt-3 text-sm text-muted-foreground">
-          Call Me AI is a social companion for adults. You must be 18 or older
-          to enter.
+          Call Me AI is a social companion for adults. You must be 18 or older to enter.
         </p>
         <div className="mt-6 flex flex-col gap-2">
           <Button
@@ -54,7 +50,9 @@ export function AgeGate({ children }: { children: React.ReactNode }) {
             onClick={() => {
               try {
                 localStorage.setItem(STORAGE_KEY, "1");
-              } catch {}
+              } catch {
+                /* age verification check failed silently */
+              }
               setVerified(true);
             }}
           >

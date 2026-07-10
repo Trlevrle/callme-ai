@@ -11,9 +11,9 @@ interface TopNavProps {
 }
 
 const navLinks = [
-  { href: "/#personas", label: "Personas" },
+  { href: "/", label: "Overview" },
   { href: "/pricing", label: "Pricing" },
-  { href: "/#how", label: "How it works" },
+  { href: "/about", label: "About" },
   { href: "/safety", label: "Safety" },
 ];
 
@@ -35,11 +35,7 @@ export function TopNav({ className, minimal = false }: TopNavProps) {
         {!minimal && (
           <nav className="hidden items-center gap-7 text-sm text-muted-foreground md:flex">
             {navLinks.map((l) => (
-              <a
-                key={l.href}
-                href={l.href}
-                className="transition-colors hover:text-foreground"
-              >
+              <a key={l.href} href={l.href} className="transition-colors hover:text-foreground">
                 {l.label}
               </a>
             ))}

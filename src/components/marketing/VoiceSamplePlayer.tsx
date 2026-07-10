@@ -67,15 +67,11 @@ export function VoiceSamplePlayer({ className }: { className?: string }) {
         ))}
       </div>
       <p className="max-w-md text-center text-sm text-muted-foreground">
-        "Hey, it's me. Pick up whenever you're ready. I just had the most
-        ridiculous idea and I need to talk to someone about it."
+        "Hey, it's me. Pick up whenever you're ready. I just had the most ridiculous idea and I need
+        to talk to someone about it."
       </p>
       <div className="flex items-center gap-3">
-        <Button
-          size="lg"
-          onClick={state === "playing" ? stop : play}
-          className="rounded-full"
-        >
+        <Button size="lg" onClick={state === "playing" ? stop : play} className="rounded-full">
           {state === "playing" ? (
             <>
               <Pause className="size-4" /> Stop
@@ -91,8 +87,7 @@ export function VoiceSamplePlayer({ className }: { className?: string }) {
         </span>
       </div>
       <p className="text-[11px] text-muted-foreground">
-        <Mic className="mr-1 inline size-3" /> Real-time voice unlocks after you
-        sign in.
+        <Mic className="mr-1 inline size-3" /> Real-time voice unlocks after you sign in.
         <MicOff className="ml-1 inline size-3 opacity-40" />
       </p>
     </div>

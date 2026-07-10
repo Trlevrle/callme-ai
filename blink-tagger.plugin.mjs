@@ -13,7 +13,7 @@
  * when either changes.
  */
 
-import * as path from 'path'
+import * as path from "path";
 
 const PICKER_RUNTIME_JS = `(function(){
   'use strict';
@@ -429,26 +429,26 @@ const PICKER_RUNTIME_JS = `(function(){
     ' html.blink-picker-editing [contenteditable="true"] { outline: 1.5px solid rgba(59,130,246,0.95) !important; outline-offset: 1px !important; border-radius: 2px !important; }';
   if (document.head) document.head.appendChild(style);
   else document.addEventListener('DOMContentLoaded', function(){ document.head.appendChild(style); });
-})();`
+})();`;
 
 export function blinkTaggerPlugin() {
   return {
-    name: 'blink-tagger',
-    enforce: 'pre',
+    name: "blink-tagger",
+    enforce: "pre",
     transformIndexHtml() {
-      return [{ tag: 'script', children: PICKER_RUNTIME_JS, injectTo: 'head' }]
+      return [{ tag: "script", children: PICKER_RUNTIME_JS, injectTo: "head" }];
     },
     transform(code, id) {
-      if (!/\.[jt]sx$/.test(id)) return null
-      if (id.includes('node_modules')) return null
-      if (code.includes('data-blnk-id=')) return null
+      if (!/\.[jt]sx$/.test(id)) return null;
+      if (id.includes("node_modules")) return null;
+      if (code.includes("data-blnk-id=")) return null;
 
       const relPath = path
         .relative(process.cwd(), id)
-        .replace(/\\/g, '/')
-        .replace(/^src\//, '')
+        .replace(/\\/g, "/")
+        .replace(/^src\//, "");
 
-      let counter = 0
+      let counter = 0;
       // The leading `(?<![A-Za-z0-9_)\]])` negative lookbehind keeps the regex
       // from matching TypeScript generic call sites like `useState<string>()`,
       // `fn<T>(x)`, or `getFoo()<T>` inside `.tsx` files. In real JSX the `<`
@@ -457,14 +457,14 @@ export function blinkTaggerPlugin() {
       const result = code.replace(
         /(?<![A-Za-z0-9_)\]])<([A-Za-z][A-Za-z0-9.]*)(\s(?:[^>]*?(?:\/?>|>))|(?:\s*\/?>))/g,
         (match, tagName, rest) => {
-          if (tagName.startsWith('!')) return match
-          const idx = counter++
-          const attrValue = `${relPath}:${idx}`
-          const sep = rest.startsWith(' ') || rest.startsWith('\n') ? '' : ' '
-          return `<${tagName} data-blnk-id="${attrValue}"${sep}${rest}`
-        }
-      )
-      return { code: result, map: null }
+          if (tagName.startsWith("!")) return match;
+          const idx = counter++;
+          const attrValue = `${relPath}:${idx}`;
+          const sep = rest.startsWith(" ") || rest.startsWith("\n") ? "" : " ";
+          return `<${tagName} data-blnk-id="${attrValue}"${sep}${rest}`;
+        },
+      );
+      return { code: result, map: null };
     },
-  }
+  };
 }

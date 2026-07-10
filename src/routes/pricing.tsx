@@ -5,39 +5,48 @@ import { AgeGate } from "@/components/marketing/AgeGate";
 import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/pricing")({
-  head: () => ({ meta: [{ title: "Pricing — Call Me AI" }] }),
+  head: () => ({
+    meta: [
+      { title: "Pricing - Call Me AI" },
+      {
+        name: "description",
+        content:
+          "Compare Call Me AI plans for private AI companion and personal voice assistant usage.",
+      },
+    ],
+  }),
   component: PricingPage,
 });
 
 const plans = [
   {
     name: "Free",
-    price: "€0",
-    period: "forever",
-    description: "Try the product. Get a feel for it.",
-    cta: "Start free",
+    price: "EUR 0",
+    period: "per month",
+    description: "Evaluate core voice and text capabilities.",
+    cta: "Create account",
     href: "/auth?mode=signup",
     features: [
-      "20 minutes of voice per month",
-      "2 personas",
-      "Text chat (unlimited)",
-      "In-chat image generation (limited)",
+      "Limited monthly voice minutes",
+      "Text conversations",
+      "Core privacy controls",
+      "Local conversation history",
     ],
   },
   {
     name: "Pro",
-    price: "€19.99",
+    price: "EUR 19.99",
     period: "per month",
-    description: "Unlimited voice. All personas. Everything we ship.",
-    cta: "Get Pro",
+    description: "Expanded usage limits for regular daily conversations.",
+    cta: "Upgrade to Pro",
     href: "https://callmeai.lemonsqueezy.com/checkout/buy/PRO_PLACEHOLDER",
     highlighted: true,
     features: [
-      "Unlimited voice minutes",
-      "All personas (more shipping soon)",
-      "In-chat image generation (unlimited)",
-      "Priority access to new models",
-      "Cancel any time",
+      "Higher voice usage allowance",
+      "Priority processing",
+      "Advanced memory continuity",
+      "Access to new features as released",
+      "Cancel renewal at any time",
     ],
   },
 ];
@@ -46,47 +55,44 @@ function PricingPage() {
   return (
     <AgeGate>
       <PublicShell>
-        <section className="mx-auto max-w-4xl px-4 py-20 sm:px-6 md:py-28">
+        <section className="mx-auto max-w-5xl px-4 py-20 sm:px-6 md:py-28">
           <div className="text-center">
             <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-primary">
               Pricing
             </p>
             <h1 className="mt-3 font-serif text-4xl tracking-tight text-foreground md:text-6xl">
-              Free to start. <em className="text-primary">Pro when you want more.</em>
+              Transparent plans for private AI conversation.
             </h1>
-            <p className="mx-auto mt-4 max-w-xl text-base text-muted-foreground">
-              No hidden fees. Cancel any time. 18+ only.
+            <p className="mx-auto mt-4 max-w-2xl text-base text-muted-foreground">
+              Billing is monthly, cancellation applies to future renewals, and access remains active
+              through the paid period.
             </p>
           </div>
 
           <div className="mt-12 grid gap-5 md:grid-cols-2">
-            {plans.map((p) => (
-              <div
-                key={p.name}
+            {plans.map((plan) => (
+              <article
+                key={plan.name}
                 className={
-                  p.highlighted
+                  plan.highlighted
                     ? "relative rounded-3xl border border-primary/40 bg-gradient-to-br from-primary/10 via-card to-card p-8"
                     : "rounded-3xl border border-border/70 bg-card/40 p-8"
                 }
               >
-                {p.highlighted && (
+                {plan.highlighted && (
                   <span className="absolute -top-3 right-6 inline-flex items-center gap-1 rounded-full bg-primary px-3 py-1 text-[10px] font-semibold uppercase tracking-wider text-primary-foreground">
-                    Most popular
+                    Recommended
                   </span>
                 )}
-                <h2 className="font-serif text-2xl text-foreground">{p.name}</h2>
-                <p className="mt-2 text-sm text-muted-foreground">
-                  {p.description}
-                </p>
-                <p className="mt-6 font-serif text-5xl text-foreground">
-                  {p.price}
-                </p>
-                <p className="mt-1 text-xs text-muted-foreground">{p.period}</p>
+                <h2 className="font-serif text-2xl text-foreground">{plan.name}</h2>
+                <p className="mt-2 text-sm text-muted-foreground">{plan.description}</p>
+                <p className="mt-6 font-serif text-5xl text-foreground">{plan.price}</p>
+                <p className="mt-1 text-xs text-muted-foreground">{plan.period}</p>
                 <ul className="mt-6 space-y-2 text-sm text-foreground/80">
-                  {p.features.map((f) => (
-                    <li key={f} className="flex items-start gap-2">
+                  {plan.features.map((feature) => (
+                    <li key={feature} className="flex items-start gap-2">
                       <Check className="mt-0.5 size-4 text-primary" />
-                      {f}
+                      {feature}
                     </li>
                   ))}
                 </ul>
@@ -94,26 +100,50 @@ function PricingPage() {
                   asChild
                   className="mt-8 w-full rounded-full"
                   size="lg"
-                  variant={p.highlighted ? "default" : "outline"}
+                  variant={plan.highlighted ? "default" : "outline"}
                 >
-                  {p.href.startsWith("http") ? (
-                    <a href={p.href}>
-                      {p.cta} <ArrowRight className="size-4" />
+                  {plan.href.startsWith("http") ? (
+                    <a href={plan.href}>
+                      {plan.cta} <ArrowRight className="size-4" />
                     </a>
                   ) : (
-                    <Link to={p.href}>
-                      {p.cta} <ArrowRight className="size-4" />
+                    <Link to={plan.href}>
+                      {plan.cta} <ArrowRight className="size-4" />
                     </Link>
                   )}
                 </Button>
-              </div>
+              </article>
             ))}
           </div>
 
           <p className="mt-8 text-center text-xs text-muted-foreground">
-            Payments are processed by our merchant-of-record partner.
-            VAT is included where applicable.
+            Payments are processed by our merchant-of-record partner. See
+            <a href="/refund-policy" className="mx-1 text-foreground underline">
+              Refund Policy
+            </a>
+            and
+            <a href="/terms" className="mx-1 text-foreground underline">
+              Terms of Service
+            </a>
+            for details.
           </p>
+
+          <div className="mx-auto mt-6 max-w-3xl rounded-2xl border border-border/60 bg-card/40 p-5 text-sm text-muted-foreground">
+            <p className="font-medium text-foreground">Adult topics mode notice</p>
+            <p className="mt-1">
+              Adult topics mode is an optional account preference for eligible adults. It does not
+              permit illegal, exploitative, non-consensual, or minor-related content. All usage
+              remains subject to our
+              <a href="/acceptable-use" className="mx-1 text-foreground underline">
+                Acceptable Use Policy
+              </a>
+              and
+              <a href="/safety" className="mx-1 text-foreground underline">
+                Safety Policy
+              </a>
+              .
+            </p>
+          </div>
         </section>
       </PublicShell>
     </AgeGate>

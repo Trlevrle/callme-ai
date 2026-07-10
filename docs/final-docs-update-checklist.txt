@@ -1,0 +1,33 @@
+FINAL DOCUMENTS UPDATE CHECKLIST
+Owner: Brani
+Purpose: Define when to update final project docs and what to include.
+
+Recommended update moment
+- Best time: launch freeze window.
+- Practical trigger: after all code edits are done, payment is integrated, and pre-launch QA is complete, but before final deploy/tag.
+
+Why this timing is best
+- Avoids repeated rewrites while implementation is still moving.
+- Ensures final docs match the shipped system and legal/payment reality.
+- Produces one clean final version suitable for handoff and records.
+
+Update trigger command for Copilot
+- Use this prompt when ready:
+  "Launch freeze reached. Update docs/personal-project-timeline.txt and docs/legal-requirements-tracker.txt with all changes from last update to now, including payment integration and launch decisions."
+
+What to add in final update
+1) Timeline file
+- Final launch date and environment readiness summary.
+- Payment integration details and completed milestones.
+- Final architecture decisions and any late risk mitigations.
+- Final QA highlights and known limitations.
+
+2) Legal tracker file
+- Final billing/refund language once payment stack is live.
+- Final processor list and compliance readiness notes.
+- Policy version snapshot at launch.
+- Any legal review outcomes and action closure.
+
+Current status
+- Base versions already created and committed in docs folder.
+- Waiting for launch freeze trigger for final pass.

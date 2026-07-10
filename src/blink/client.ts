@@ -1,14 +1,29 @@
-import { createClient } from "@blinkdotnew/sdk";
+const CLIENT_DISABLED_MESSAGE =
+  "Browser-side provider client is disabled for security. Use server /api routes instead.";
 
-const projectId =
-  import.meta.env.VITE_BLINK_PROJECT_ID || "vocalis-design-system-g8i6sn3c";
-const publishableKey =
-  import.meta.env.VITE_BLINK_PUBLISHABLE_KEY ||
-  "blnk_pk_JzPjvpyFP-rmlC7nl5QkHnS-uKyWrW6W";
+function disabledClientError() {
+  return new Error(CLIENT_DISABLED_MESSAGE);
+}
 
-export const blink = createClient({
-  projectId,
-  publishableKey,
-  authRequired: false,
-  auth: { mode: "managed" },
-});
+export const blink = {
+  auth: {
+    login: (redirectTo = "/app") => {
+      if (typeof window !== "undefined") {
+        window.location.assign(redirectTo);
+      }
+    },
+    logout: () => undefined,
+    getUser: () => null,
+  },
+  ai: {
+    generateText: async () => {
+      throw disabledClientError();
+    },
+    generateImage: async () => {
+      throw disabledClientError();
+    },
+  },
+};
+export const blinkClient = blink;
+export const projectId = "callme-ai";
+export const publishableKey = "dev-placeholder";

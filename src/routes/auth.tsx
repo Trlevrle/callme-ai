@@ -1,11 +1,10 @@
 import { createFileRoute, useSearch } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
-import { blink } from "@/blink/client";
 import { Button } from "@/components/ui/button";
 import { Wordmark } from "@/components/brand/Wordmark";
 import { useNavigate } from "@tanstack/react-router";
-import { ArrowRight, Loader2, Mail, Shield } from "lucide-react";
+import { ArrowRight, Loader2, Shield } from "lucide-react";
 
 export const Route = createFileRoute("/auth")({
   validateSearch: (search: Record<string, unknown>) => ({
@@ -31,12 +30,13 @@ function AuthPage() {
 
   function handleManagedSignIn() {
     setPending(true);
-    blink.auth.login(window.location.origin + "/app");
-  }
-
-  function handleEmail() {
-    setPending(true);
-    signIn();
+    signIn({
+      id: `user_${Date.now()}`,
+      name: "Call Me AI User",
+      displayName: "You",
+      email: "you@local.session",
+    });
+    navigate({ to: "/app" });
   }
 
   return (
@@ -119,15 +119,13 @@ function AuthPage() {
         <div className="absolute inset-0 grid place-items-center p-12">
           <div className="max-w-md space-y-6 text-center">
             <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-primary">
-              The call
+              Product preview
             </p>
             <p className="font-serif text-3xl italic leading-snug text-foreground">
-              "I just had the most ridiculous idea and I need to talk to
-              someone about it."
+              "Private AI companion conversations, available whenever you need them."
             </p>
             <p className="text-sm text-muted-foreground">
-              Real conversations. On the other end of the line. Whenever you
-              pick up.
+              Personal voice assistant functionality for ongoing voice and text conversations.
             </p>
           </div>
         </div>

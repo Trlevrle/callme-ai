@@ -6,9 +6,9 @@ type LovableErrorOptions = {
 
 type LovableEvents = {
   captureException?: (
-    error: unknown,
-    context?: Record<string, unknown>,
-    options?: LovableErrorOptions,
+    _error: unknown,
+    _context?: Record<string, unknown>,
+    _options?: LovableErrorOptions,
   ) => void;
 };
 

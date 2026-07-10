@@ -1,0 +1,63 @@
+CALL ME AI - LEGAL REQUIREMENTS TRACKER
+Jurisdiction focus: EU/EEA baseline (practical starting point for Croatia)
+Owner: Brani
+Status: Working compliance tracker (not legal advice)
+
+Important note
+- This file is an operational compliance tracker, not a substitute for legal counsel.
+- Recommended: short legal review before public launch and payment go-live.
+
+1) Is a project timeline document legally required?
+- No general law requires a specific document named project timeline.
+- It is still useful as evidence of governance, safety decisions, and operational due diligence.
+
+2) What is generally required or strongly recommended
+A. Data protection (GDPR baseline)
+- Privacy notice covering data categories, lawful basis, retention, and user rights.
+- Process for data subject rights requests (access/deletion/correction).
+- Processor documentation for providers handling user data.
+
+B. Processing records
+- Maintain internal records of processing activities where applicable.
+
+C. Security and incident readiness
+- Technical and organizational security controls.
+- Incident response process, including breach notification workflow where required.
+
+D. Terms and policy controls
+- Terms of Service, Acceptable Use, and Safety policy must clearly define prohibited behavior.
+- Enforcement and suspension policy should be explicit.
+
+E. Consumer/billing transparency
+- Clear subscription pricing, renewal behavior, cancellation, and refund handling.
+- Merchant-of-record/payment flow details should be unambiguous.
+
+F. 18+ and sensitive-content boundaries
+- Age gating and strict minor-related prohibitions should remain explicit.
+- Adult topics mode must not bypass legal or policy restrictions.
+
+3) Implemented status in this project so far
+- Adult topics mode controls implemented in Settings and Chat, with global visibility indicator.
+- SFW-first with explicit adult-capable fallback architecture implemented.
+- Chat and image routes include rate limiting and structured logging.
+- Pricing, Terms, Safety, Privacy, and Refund policy pages updated for clearer boundaries.
+- Environment documentation expanded for fallback and provider controls.
+
+4) Pre-launch remaining legal/compliance checklist
+Priority 1
+- Confirm data processing map and retention rules in one internal record.
+- Confirm processor list and contractual coverage (DPA where needed).
+- Finalize user-rights request handling flow and response SLA.
+
+Priority 2
+- Finalize billing and refund wording after payment integration is fully wired.
+- Verify all policy links and metadata in production routes.
+- Confirm moderation/escalation process for safety reports.
+
+Priority 3
+- Run a final legal review for consumer law and GDPR wording consistency.
+- Capture launch-day policy version snapshot for records.
+
+5) Decision log
+- Keeping this tracker is strongly recommended for launch readiness and auditability.
+- Not strictly required by name, but operationally valuable and low maintenance.

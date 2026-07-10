@@ -1,0 +1,32 @@
+PRIVATE DOCS CLEANUP MEMO
+Owner: Brani
+Scope: docs/personal-project-timeline.txt and docs/legal-requirements-tracker.txt
+
+Goal
+- Keep docs during active development.
+- Remove docs from repo after final update and local download/export.
+
+Recommended timing
+- Do this at launch freeze, after final doc update and after confirming downloaded copies open correctly.
+
+Final cleanup checklist
+1) Finalize both docs with launch and payment details.
+2) Export/download copies to local safe folder outside repo.
+3) Confirm files are readable and backed up.
+4) Delete the repo copies:
+   - docs/personal-project-timeline.txt
+   - docs/legal-requirements-tracker.txt
+   - docs/final-docs-update-checklist.txt
+   - docs/private-docs-cleanup-memo.txt
+   - docs/production-auth-plan.md
+5) Commit cleanup as a dedicated "docs cleanup" commit.
+
+One-click command
+- npm run launch:freeze:cleanup-docs
+
+Optional hardening
+- If you never want private docs inside repo again, keep personal notes outside repo root or in a private vault.
+- If needed, add docs/*.txt to .gitignore AFTER deleting tracked files.
+
+Launch-freeze prompt to run with Copilot
+"Launch freeze reached. Update docs/personal-project-timeline.txt and docs/legal-requirements-tracker.txt with final launch/payment changes, then perform docs cleanup per docs/private-docs-cleanup-memo.txt and summarize removed files."

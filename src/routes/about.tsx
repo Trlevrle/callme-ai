@@ -2,32 +2,39 @@ import { createFileRoute } from "@tanstack/react-router";
 import { PublicShell } from "@/components/layout/PublicShell";
 
 export const Route = createFileRoute("/about")({
-  head: () => ({ meta: [{ title: "About — Call Me AI" }] }),
+  head: () => ({
+    meta: [
+      { title: "About - Call Me AI" },
+      {
+        name: "description",
+        content:
+          "Learn about Call Me AI, a privacy-first AI companion and personal voice assistant platform.",
+      },
+    ],
+  }),
   component: AboutPage,
 });
 
 function AboutPage() {
   return (
     <PublicShell>
-      <section className="mx-auto max-w-2xl px-4 py-20 sm:px-6 md:py-28">
-        <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-primary">
-          About
-        </p>
+      <section className="mx-auto max-w-3xl px-4 py-20 sm:px-6 md:py-28">
+        <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-primary">About</p>
         <h1 className="mt-3 font-serif text-4xl tracking-tight text-foreground md:text-6xl">
-          A real <em className="text-primary">conversation</em> on the other end of the line.
+          Private AI companion technology for meaningful conversation.
         </h1>
         <p className="mt-6 text-base text-muted-foreground">
-          Call Me AI is a small team building a social companion for adults.
-          We believe AI should be approachable, warm, and present — not cold
-          and transactional.
+          Call Me AI builds a personal voice assistant experience focused on continuity, safety, and
+          user privacy. Our product combines voice and text conversation with memory and clear
+          controls over local conversation history.
         </p>
         <p className="mt-4 text-base text-muted-foreground">
-          Pick a persona, hit call, and have a conversation. That is the
-          product.
+          We design for reliability across desktop and mobile, with transparent policies and
+          operational safeguards suitable for production usage.
         </p>
         <p className="mt-8 text-sm text-muted-foreground">
-          Questions?{" "}
-          <a href="mailto:hello@callmeai.io" className="text-foreground underline">
+          Contact:
+          <a href="mailto:hello@callmeai.io" className="ml-1 text-foreground underline">
             hello@callmeai.io
           </a>
         </p>
