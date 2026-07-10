@@ -74,12 +74,16 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { property: "og:type", content: "website" },
       { property: "og:url", content: "https://callmeai.io" },
+      { property: "og:image", content: "https://callmeai.io/og-image.svg" },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "Call Me AI - Private AI Companion" },
       {
         name: "twitter:description",
         content: "Personal voice assistant with private memory and always-available conversation.",
       },
+      { name: "twitter:image", content: "https://callmeai.io/og-image.svg" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },

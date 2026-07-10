@@ -62,8 +62,8 @@ function isLikelySafetyBlock(message: string) {
 async function readJsonBody(req: ProxyRequest): Promise<ProxyBody> {
   return new Promise<ProxyBody>((resolve, reject) => {
     let body = "";
-    req.on("data", (chunk: string) => {
-      body += chunk;
+    req.on("data", (chunk?: string) => {
+      body += chunk ?? "";
     });
     req.on("end", () => {
       try {
@@ -412,6 +412,70 @@ export default defineConfig({
     react(),
     tailwindcss(),
     tsconfigPaths({ projects: ["./tsconfig.json"] }),
+    {
+      name: "dev-api-proxy",
+      configureServer(server) {
+        loadRuntimeEnv();
+
+        server.middlewares.use(
+          "/api/chat",
+          async (
+            req: import("http").IncomingMessage,
+            res: import("http").ServerResponse,
+            next: () => void,
+          ) => {
+            if (req.method !== "POST") {
+              next();
+              return;
+            }
+            try {
+              const body = await readJsonBody(req as unknown as ProxyRequest);
+              const payload = await handleChatProxy(body as ChatProxyPayload);
+              res.statusCode = 200;
+              res.setHeader("Content-Type", "application/json");
+              res.end(JSON.stringify(payload));
+            } catch (error) {
+              res.statusCode = 502;
+              res.setHeader("Content-Type", "application/json");
+              res.end(
+                JSON.stringify({
+                  message: error instanceof Error ? error.message : "The assistant hit a snag.",
+                }),
+              );
+            }
+          },
+        );
+
+        server.middlewares.use(
+          "/api/image",
+          async (
+            req: import("http").IncomingMessage,
+            res: import("http").ServerResponse,
+            next: () => void,
+          ) => {
+            if (req.method !== "POST") {
+              next();
+              return;
+            }
+            try {
+              const body = await readJsonBody(req as unknown as ProxyRequest);
+              const payload = await handleImageProxy(body as ImageProxyPayload);
+              res.statusCode = 200;
+              res.setHeader("Content-Type", "application/json");
+              res.end(JSON.stringify(payload));
+            } catch (error) {
+              res.statusCode = 502;
+              res.setHeader("Content-Type", "application/json");
+              res.end(
+                JSON.stringify({
+                  message: error instanceof Error ? error.message : "The image service hit a snag.",
+                }),
+              );
+            }
+          },
+        );
+      },
+    },
   ],
   build: {
     rollupOptions: {
@@ -442,55 +506,6 @@ export default defineConfig({
         secure: true,
         rewrite: (path) => path.replace(/^\/api\/openai/, ""),
       },
-    },
-    configureServer(server) {
-      loadRuntimeEnv();
-
-      server.middlewares.use("/api/chat", async (req, res, next) => {
-        if (req.method !== "POST") {
-          next();
-          return;
-        }
-
-        try {
-          const body = await readJsonBody(req);
-          const payload = await handleChatProxy(body as ChatProxyPayload);
-          res.statusCode = 200;
-          res.setHeader("Content-Type", "application/json");
-          res.end(JSON.stringify(payload));
-        } catch (error) {
-          res.statusCode = 502;
-          res.setHeader("Content-Type", "application/json");
-          res.end(
-            JSON.stringify({
-              message: error instanceof Error ? error.message : "The assistant hit a snag.",
-            }),
-          );
-        }
-      });
-
-      server.middlewares.use("/api/image", async (req, res, next) => {
-        if (req.method !== "POST") {
-          next();
-          return;
-        }
-
-        try {
-          const body = await readJsonBody(req);
-          const payload = await handleImageProxy(body as ImageProxyPayload);
-          res.statusCode = 200;
-          res.setHeader("Content-Type", "application/json");
-          res.end(JSON.stringify(payload));
-        } catch (error) {
-          res.statusCode = 502;
-          res.setHeader("Content-Type", "application/json");
-          res.end(
-            JSON.stringify({
-              message: error instanceof Error ? error.message : "The image service hit a snag.",
-            }),
-          );
-        }
-      });
     },
   },
 });

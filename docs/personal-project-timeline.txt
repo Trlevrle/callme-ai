@@ -65,3 +65,7 @@ G. Repository independence and sync
 - Final QA pass results and launch date record.
 - Post-launch monitoring and first-incident notes.
 - Confirm whether any remaining docs should be archived or kept as active records.
+- Pending implementation items once LemonSqueezy server endpoints are available:
+	- Webhook-driven subscription state sync and refund event handling.
+	- Daily usage tracking and quota reset logic tied to billing state.
+

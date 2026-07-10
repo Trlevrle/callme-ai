@@ -60,6 +60,10 @@ Priority 3
 - Run a final legal review for consumer law and GDPR wording consistency.
 - Capture launch-day policy version snapshot for records.
 - Confirm the final public contact email set and keep it consistent across all policies.
+- Keep the payment-specific policy items pending until LemonSqueezy server endpoints are live:
+	- webhook-based subscription status sync
+	- refund event handling
+	- daily usage accounting connected to the billing record
 
 5) Decision log
 - Keeping this tracker is strongly recommended for launch readiness and auditability.

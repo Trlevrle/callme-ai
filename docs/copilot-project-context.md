@@ -20,6 +20,11 @@ Operational defaults
 - For release/launch-freeze cleanup use: npm run launch:freeze:cleanup-docs
 - Keep docs cleanup as a dedicated commit if executed.
 
+Post-cleanup integrity baseline (2026-07-10)
+- Project source files were audited after a system cleanup pass; no tracked app files were missing.
+- npm runtime corruption was outside the repo (global Node/npm install) and was recovered.
+- Current validation baseline: lint clean and TypeScript check clean.
+
 Known architecture facts
 - Frontend: React + TanStack Router/Start + Vite.
 - Server endpoints: server/api/chat.post.ts and server/api/image.post.ts.

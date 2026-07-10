@@ -100,14 +100,18 @@ export function TopNav({ className, minimal = false }: TopNavProps) {
                   size="sm"
                   className="hidden rounded-full sm:inline-flex"
                 >
-                  <Link to="/auth">Sign in</Link>
+                  <Link to="/auth" search={{ mode: "signin" }}>
+                    Sign in
+                  </Link>
                 </Button>
                 <Button
                   asChild
                   size="sm"
                   className="rounded-full ring-1 ring-primary/20 shadow-sm shadow-primary/10"
                 >
-                  <Link to="/auth?mode=signup">Get started</Link>
+                  <Link to="/auth" search={{ mode: "signup" }}>
+                    Get started
+                  </Link>
                 </Button>
               </>
             )}
@@ -155,12 +159,12 @@ export function TopNav({ className, minimal = false }: TopNavProps) {
 
           <div className="mt-auto flex flex-col gap-2 px-5 pb-10 pt-6">
             <Button asChild size="lg" className="w-full rounded-full">
-              <Link to="/auth?mode=signup" onClick={() => setMenuOpen(false)}>
+              <Link to="/auth" search={{ mode: "signup" }} onClick={() => setMenuOpen(false)}>
                 Get started
               </Link>
             </Button>
             <Button asChild variant="ghost" size="lg" className="w-full rounded-full">
-              <Link to="/auth" onClick={() => setMenuOpen(false)}>
+              <Link to="/auth" search={{ mode: "signin" }} onClick={() => setMenuOpen(false)}>
                 Sign in
               </Link>
             </Button>

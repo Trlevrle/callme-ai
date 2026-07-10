@@ -115,7 +115,7 @@ function Hero() {
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <Button asChild size="lg" className="rounded-full">
-              <Link to="/auth?mode=signup">
+              <Link to="/auth" search={{ mode: "signup" }}>
                 Start free <ArrowRight className="size-4" />
               </Link>
             </Button>

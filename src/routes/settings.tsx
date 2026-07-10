@@ -26,7 +26,7 @@ function SettingsPage() {
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
-      navigate({ to: "/auth?mode=signin" });
+      navigate({ to: "/auth", search: { mode: "signin" } });
     }
   }, [isAuthenticated, isLoading, navigate]);
 

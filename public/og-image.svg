@@ -1,0 +1,21 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="630" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0B0A0F" />
+      <stop offset="0.55" stop-color="#151126" />
+      <stop offset="1" stop-color="#241A3D" />
+    </linearGradient>
+    <linearGradient id="accent" x1="120" y1="120" x2="1080" y2="510" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F5C36A" />
+      <stop offset="1" stop-color="#E39D5B" />
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" rx="48" fill="url(#bg)" />
+  <circle cx="1020" cy="120" r="150" fill="#F5C36A" fill-opacity="0.12" />
+  <circle cx="190" cy="500" r="180" fill="#E39D5B" fill-opacity="0.12" />
+  <rect x="80" y="80" width="1040" height="470" rx="36" stroke="rgba(255,255,255,0.14)" />
+  <text x="120" y="190" fill="#F7F2E8" font-family="Inter, Arial, sans-serif" font-size="34" font-weight="700" letter-spacing="6">CALL ME AI</text>
+  <text x="120" y="320" fill="#F7F2E8" font-family="Fraunces, Georgia, serif" font-size="78" font-weight="600">Private conversations.</text>
+  <text x="120" y="395" fill="#F7F2E8" font-family="Fraunces, Georgia, serif" font-size="78" font-weight="600">Consistent memory.</text>
+  <text x="120" y="468" fill="url(#accent)" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="600">Private AI companion and voice assistant</text>
+</svg>

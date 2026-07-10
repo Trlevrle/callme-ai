@@ -1,6 +1,13 @@
 import { useRef, useState } from "react";
 import { appLogger } from "@/lib/logger";
 
+interface SpeechRecognitionEvent {
+  readonly results: {
+    readonly length: number;
+    [index: number]: { readonly length: number; [index: number]: { readonly transcript: string } };
+  };
+}
+
 type SpeechRecognitionCtor = new () => SpeechRecognitionLike;
 
 type SpeechRecognitionLike = {
@@ -137,7 +144,7 @@ export function useVoiceCompanion(options: UseVoiceCompanionOptions) {
       };
 
       recognition.onresult = (event: SpeechRecognitionEvent) => {
-        const transcript = Array.from(event.results)
+        const transcript = Array.from({ length: event.results.length }, (_, i) => event.results[i])
           .map((result) => result[0]?.transcript ?? "")
           .join(" ")
           .trim();
