@@ -14,7 +14,7 @@ const footerLinks = [
     items: [
       { label: "About", href: "/about" },
       { label: "Safety", href: "/safety" },
-      { label: "Contact", href: "mailto:hello@callmeai.io" },
+      { label: "Contact", href: "mailto:support@callme-ai.com" },
     ],
   },
   {
@@ -64,8 +64,8 @@ export function Footer() {
         </div>
 
         <div className="mt-12 flex flex-col items-start justify-between gap-4 border-t border-border/60 pt-6 text-xs text-muted-foreground md:flex-row md:items-center">
-          <span>© {year} Call Me AI. All rights reserved.</span>
-          <span>Built for private and reliable conversation experiences.</span>
+          <span>© {year} Call Me AI &middot; Croatia, EU. All rights reserved.</span>
+          <span>Payments powered by LemonSqueezy</span>
         </div>
       </div>
     </footer>

@@ -97,7 +97,10 @@ function Hero() {
             Private AI companion platform
           </div>
           <h1 className="mt-6 font-serif text-5xl leading-[1.04] tracking-tight text-foreground md:text-6xl lg:text-7xl">
-            Private conversations.
+            <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+              Private
+            </span>{" "}
+            conversations.
             <br />
             Consistent memory.
             <br />
@@ -129,6 +132,9 @@ function Hero() {
             </span>
             <span className="inline-flex items-center gap-1.5">
               <Shield className="size-3.5 text-primary" /> Privacy controls built in
+            </span>
+            <span className="inline-flex items-center gap-1.5 font-medium text-primary/70">
+              <Shield className="size-3.5 text-primary" /> No data sold. Ever.
             </span>
           </div>
         </div>

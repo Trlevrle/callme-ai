@@ -2,18 +2,25 @@
 import type { ReactNode } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/sonner";
+import { CookieBanner } from "@/components/marketing/CookieBanner";
 import appCss from "../styles.css?url";
 
 function NotFoundComponent() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
-      <div className="max-w-md text-center">
-        <h1 className="text-7xl font-bold text-foreground">404</h1>
-        <h2 className="mt-4 text-xl font-semibold text-foreground">Page not found</h2>
-        <p className="mt-2 text-sm text-muted-foreground">
-          The page you're looking for doesn't exist or has been moved.
-        </p>
-      </div>
+    <div className="flex min-h-screen flex-col items-center justify-center bg-background px-4 text-center">
+      <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-primary">404</p>
+      <h1 className="mt-4 font-serif text-5xl tracking-tight text-foreground md:text-6xl">
+        Lost in the void?
+      </h1>
+      <p className="mt-4 max-w-sm text-base text-muted-foreground">
+        This page doesn&rsquo;t exist or has been moved. Let&rsquo;s get you home.
+      </p>
+      <a
+        href="/"
+        className="mt-8 inline-flex items-center gap-2 rounded-full bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
+      >
+        Back to home
+      </a>
     </div>
   );
 }
@@ -28,7 +35,11 @@ function RootShell({ children }: { children: ReactNode }) {
         <HeadContent />
       </head>
       <body className="min-h-dvh bg-background text-foreground antialiased">
+        <a href="#main-content" className="skip-link">
+          Skip to main content
+        </a>
         {children}
+        <CookieBanner />
         <Toaster />
         <Scripts />
       </body>
