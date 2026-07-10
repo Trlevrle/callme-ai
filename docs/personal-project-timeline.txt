@@ -39,6 +39,12 @@ F. Legal/compliance product copy
 - Terms updated with dedicated Adult Topics Mode section.
 - Safety updated with explicit policy-gated Adult topics rule.
 - Refund Policy page added and linked.
+- Public legal pages were later rewritten in a more privacy-first tone while keeping the required legal coverage.
+
+G. Repository independence and sync
+- Lovable-specific scaffolding, wrapper config, and branding traces were removed from the repo.
+- The project now builds with standard Vite + TanStack Start tooling.
+- GitHub is the canonical source of truth for repo sync and release history.
 
 3) Why these decisions were made
 - SFW-first default lowers risk and improves baseline safety.
@@ -49,12 +55,13 @@ F. Legal/compliance product copy
 
 4) Current launch-critical priorities
 - Final end-to-end QA for fallback behavior and mode gating.
-- Payment integration completion and legal copy final pass.
 - Production env verification for primary and fallback credentials.
 - Final launch readiness checklist and incident response rehearsal.
+- Ongoing post-launch polish on public policy wording and onboarding clarity.
 
 5) Open for final update at launch freeze
 - Payment integration specifics (provider, webhook states, retries, refunds).
 - Final production config values and backup rotation plan.
 - Final QA pass results and launch date record.
 - Post-launch monitoring and first-incident notes.
+- Confirm whether any remaining docs should be archived or kept as active records.

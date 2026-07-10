@@ -42,6 +42,8 @@ F. 18+ and sensitive-content boundaries
 - Chat and image routes include rate limiting and structured logging.
 - Pricing, Terms, Safety, Privacy, and Refund policy pages updated for clearer boundaries.
 - Environment documentation expanded for fallback and provider controls.
+- Public legal pages were revised to use privacy-first wording while preserving required compliance language.
+- Repo is now decoupled from Lovable-specific scaffolding and uses standard Vite + TanStack Start config.
 
 4) Pre-launch remaining legal/compliance checklist
 Priority 1
@@ -57,6 +59,7 @@ Priority 2
 Priority 3
 - Run a final legal review for consumer law and GDPR wording consistency.
 - Capture launch-day policy version snapshot for records.
+- Confirm the final public contact email set and keep it consistent across all policies.
 
 5) Decision log
 - Keeping this tracker is strongly recommended for launch readiness and auditability.

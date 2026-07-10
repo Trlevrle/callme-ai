@@ -30,4 +30,5 @@ What to add in final update
 
 Current status
 - Base versions already created and committed in docs folder.
-- Waiting for launch freeze trigger for final pass.
+- Public legal pages were already revised once for privacy-first wording.
+- Remaining updates should only be used for launch freeze or legal wording corrections.
