@@ -49,10 +49,21 @@ function PersonaDetail() {
         <div
           className={cn(
             "relative grid aspect-[4/5] place-items-center overflow-hidden rounded-3xl border border-border/60 bg-gradient-to-br",
-            persona.accent,
+            persona.accentGradientClass,
           )}
         >
-          <span className="font-serif italic text-[12rem] text-foreground/40">{persona.emoji}</span>
+          {persona.avatarUrl ? (
+            <img
+              src={persona.avatarUrl}
+              alt={persona.name}
+              className="size-full object-cover"
+              loading="lazy"
+            />
+          ) : (
+            <span className="font-serif text-[5rem] uppercase tracking-wide text-foreground/40">
+              {monogram(persona.name)}
+            </span>
+          )}
         </div>
 
         <div className="flex flex-col justify-center">
@@ -63,10 +74,12 @@ function PersonaDetail() {
             {persona.name}
           </h1>
           <p className="mt-2 text-lg text-muted-foreground">{persona.tagline}</p>
+          <p className="mt-3 text-sm text-muted-foreground">{persona.lore}</p>
           <p className="mt-1 text-sm text-muted-foreground">
             <Mic className="mr-1 inline size-3" />
-            {persona.voice}
+            {voiceProfileSummary(persona.voiceProfile)} voice profile
           </p>
+          <p className="mt-2 text-sm text-foreground/80">{persona.personalityNotes}</p>
 
           <ul className="mt-6 space-y-2 text-sm text-foreground/80">
             <li className="flex items-start gap-2">
@@ -112,4 +125,29 @@ function Hint({ icon: Icon, label }: { icon: typeof Mic; label: string }) {
       {label}
     </div>
   );
+}
+
+function monogram(name: string) {
+  return name
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase() ?? "")
+    .join("");
+}
+
+function voiceProfileSummary(profile: { rate: number; pitch: number }) {
+  if (profile.rate <= 0.9 && profile.pitch <= 0.9) {
+    return "Grounded low";
+  }
+
+  if (profile.pitch >= 1.05) {
+    return "Soft bright";
+  }
+
+  if (profile.rate <= 0.9) {
+    return "Calm measured";
+  }
+
+  return "Balanced warm";
 }

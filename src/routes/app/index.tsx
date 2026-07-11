@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Plus, Mic, History, MessageSquare, ImagePlus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { personas } from "@/lib/personas";
+import { PERSONAS } from "@/lib/personas";
 import { useAuth } from "@/hooks/useAuth";
 import { clearAllConversations, clearConversation, listConversations } from "@/lib/storage";
 import { useEffect, useState } from "react";
@@ -34,7 +34,7 @@ function AppHome() {
         </div>
 
         <div className="mt-8 grid gap-4 sm:grid-cols-2">
-          {personas.map((p) => (
+          {PERSONAS.map((p) => (
             <Link
               key={p.id}
               to="/personas/$personaId"
@@ -42,16 +42,32 @@ function AppHome() {
               className="group flex items-start gap-4 rounded-2xl border border-border/60 bg-card/60 p-5 transition-all hover:border-border hover:bg-card"
             >
               <div
-                className={`grid size-12 shrink-0 place-items-center rounded-2xl bg-gradient-to-br ${p.accent} text-2xl`}
+                className={`grid size-12 shrink-0 place-items-center overflow-hidden rounded-2xl bg-gradient-to-br ${p.accentGradientClass} text-sm`}
               >
-                <span className="font-serif italic text-foreground/70">{p.emoji}</span>
+                {p.avatarUrl ? (
+                  <img
+                    src={p.avatarUrl}
+                    alt={p.name}
+                    className="size-full object-cover"
+                    loading="lazy"
+                  />
+                ) : (
+                  <span className="font-serif uppercase text-foreground/80">
+                    {monogram(p.name)}
+                  </span>
+                )}
               </div>
               <div className="min-w-0 flex-1">
                 <h3 className="font-serif text-lg text-foreground">{p.name}</h3>
                 <p className="mt-0.5 truncate text-xs text-muted-foreground">{p.tagline}</p>
-                <p className="mt-2 inline-flex items-center gap-1 text-[11px] text-primary">
-                  <Mic className="size-3" /> {p.voice}
-                </p>
+                <div className="mt-2 flex items-center gap-2">
+                  <p className="inline-flex items-center gap-1 text-[11px] text-primary">
+                    <Mic className="size-3" /> {voiceProfileSummary(p.voiceProfile)}
+                  </p>
+                  <span className="rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 text-[10px] uppercase tracking-[0.18em] text-primary">
+                    {p.tier}
+                  </span>
+                </div>
               </div>
             </Link>
           ))}
@@ -87,7 +103,7 @@ function AppHome() {
             </div>
             <div className="mt-4 space-y-2">
               {conversations.map((conversation) => {
-                const persona = personas.find((item) => item.id === conversation.personaId);
+                const persona = PERSONAS.find((item) => item.id === conversation.personaId);
                 return (
                   <div
                     key={conversation.personaId}
@@ -144,4 +160,29 @@ function FeatureHint({ icon: Icon, label }: { icon: typeof Plus; label: string }
       {label}
     </div>
   );
+}
+
+function monogram(name: string) {
+  return name
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase() ?? "")
+    .join("");
+}
+
+function voiceProfileSummary(profile: { rate: number; pitch: number }) {
+  if (profile.rate <= 0.9 && profile.pitch <= 0.9) {
+    return "Grounded low";
+  }
+
+  if (profile.pitch >= 1.05) {
+    return "Soft bright";
+  }
+
+  if (profile.rate <= 0.9) {
+    return "Calm measured";
+  }
+
+  return "Balanced warm";
 }

@@ -35,7 +35,7 @@ export function AcceptableUsePage() {
       sections={[
         {
           id: "welcome",
-          title: "1. What&rsquo;s Welcome",
+          title: "1. What's Welcome",
           body: (
             <ul className="list-inside list-disc space-y-1">
               <li>Creative, personal, and exploratory conversations</li>
@@ -47,7 +47,7 @@ export function AcceptableUsePage() {
         },
         {
           id: "not-allowed",
-          title: "2. What&rsquo;s Not Allowed",
+          title: "2. What's Not Allowed",
           body: (
             <ul className="list-inside list-disc space-y-1">
               <li>Any content involving minors in sexual, violent, or exploitative contexts</li>

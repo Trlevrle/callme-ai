@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, Check } from "lucide-react";
+import { ArrowRight, Check, Shield } from "lucide-react";
 import { PublicShell } from "@/components/layout/PublicShell";
 import { AgeGate } from "@/components/marketing/AgeGate";
 import { Button } from "@/components/ui/button";
@@ -46,6 +46,7 @@ const plans: Plan[] = [
     href: "/auth?mode=signup",
     external: false,
     features: [
+      "Text chat only (no voice calls)",
       "15 SFW chat messages per day",
       "3 image generations per day",
       "1 default persona",
@@ -65,6 +66,7 @@ const plans: Plan[] = [
     external: true,
     highlighted: true,
     features: [
+      "Voice calls + memory + NSFW personas",
       "200 SFW + 80 adult messages/day",
       "30 image generations/day (15 adult)",
       "10 min voice per day",
@@ -85,6 +87,7 @@ const plans: Plan[] = [
     href: "https://callmeai.lemonsqueezy.com/checkout/buy/PREMIUM_PLACEHOLDER",
     external: true,
     features: [
+      "Voice calls + memory + NSFW personas",
       "Unlimited SFW + 300 adult messages/day",
       "80 image generations/day (50 adult)",
       "45 min voice per day",
@@ -115,6 +118,18 @@ function PricingPage() {
               Start free and upgrade when you need more. Billing is handled by LemonSqueezy as
               Merchant of Record. Cancel anytime.
             </p>
+
+            <div className="mx-auto mt-4 flex max-w-3xl flex-wrap items-center justify-center gap-2">
+              <span className="rounded-full border border-border/60 bg-card/60 px-3 py-1 text-[11px] text-muted-foreground">
+                Free: text only
+              </span>
+              <span className="rounded-full border border-primary/35 bg-primary/10 px-3 py-1 text-[11px] text-primary">
+                Paid: voice + memory + NSFW personas
+              </span>
+              <span className="inline-flex items-center gap-1 rounded-full border border-border/60 bg-card/60 px-3 py-1 text-[11px] text-muted-foreground">
+                <Shield className="size-3" /> Secure checkout via LemonSqueezy
+              </span>
+            </div>
 
             {/* Billing toggle */}
             <div className="mt-8 inline-flex rounded-full border border-border/60 bg-card/60 p-1 text-sm">
@@ -232,7 +247,7 @@ function PricingPage() {
             <a href="/terms" className="text-foreground underline">
               Terms of Service
             </a>{" "}
-            for details.
+            for details. VAT and local taxes are handled at checkout where applicable.
           </p>
 
           {/* Adult topics notice */}

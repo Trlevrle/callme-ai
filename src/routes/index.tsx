@@ -74,6 +74,12 @@ const faqs = [
   },
 ];
 
+const privateVoiceTaglines = [
+  "Private voice intimacy, always on your terms.",
+  "Talk freely. Nothing performative, nothing public.",
+  "Text when quiet, voice when it matters.",
+];
+
 function HomePage() {
   return (
     <AgeGate>
@@ -113,6 +119,16 @@ function Hero() {
           <p className="mt-4 rounded-2xl border border-primary/30 bg-primary/10 px-4 py-3 font-serif text-2xl italic text-foreground md:text-3xl">
             "She remembers everything, and tells no one."
           </p>
+          <div className="mt-4 grid gap-2 sm:grid-cols-3">
+            {privateVoiceTaglines.map((tagline) => (
+              <p
+                key={tagline}
+                className="rounded-xl border border-border/60 bg-card/50 px-3 py-2 text-xs text-muted-foreground"
+              >
+                {tagline}
+              </p>
+            ))}
+          </div>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <Button asChild size="lg" className="rounded-full">
               <Link to="/auth" search={{ mode: "signup" }}>
@@ -202,9 +218,20 @@ function PricingPreview() {
           Start free. Upgrade when you need more.
         </h2>
         <p className="mx-auto mt-4 max-w-xl text-base text-muted-foreground">
-          Choose the plan that matches your usage, with straightforward billing and professional
-          support.
+          Free includes text-only chat. Paid plans unlock voice calls, continuous memory, and NSFW
+          personas with secure checkout handled by LemonSqueezy.
         </p>
+        <div className="mx-auto mt-4 flex max-w-2xl flex-wrap items-center justify-center gap-2">
+          <span className="rounded-full border border-border/60 bg-card/60 px-3 py-1 text-[11px] text-muted-foreground">
+            Free: text only
+          </span>
+          <span className="rounded-full border border-primary/35 bg-primary/10 px-3 py-1 text-[11px] text-primary">
+            Pro/Premium: voice + memory + NSFW personas
+          </span>
+          <span className="rounded-full border border-border/60 bg-card/60 px-3 py-1 text-[11px] text-muted-foreground">
+            Secure checkout via LemonSqueezy (MoR)
+          </span>
+        </div>
         <Button asChild size="lg" className="mt-8 rounded-full">
           <Link to="/pricing">
             Compare plans <ArrowRight className="size-4" />
