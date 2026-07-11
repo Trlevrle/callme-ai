@@ -2,7 +2,6 @@ import { defineConfig } from "vite";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
-import tsconfigPaths from "vite-tsconfig-paths";
 import { loadRuntimeEnv } from "./server/utils/env";
 
 type ChatProxyPayload = {
@@ -411,7 +410,6 @@ export default defineConfig({
     tanstackStart(),
     react(),
     tailwindcss(),
-    tsconfigPaths({ projects: ["./tsconfig.json"] }),
     {
       name: "dev-api-proxy",
       configureServer(server) {
@@ -477,6 +475,9 @@ export default defineConfig({
       },
     },
   ],
+  resolve: {
+    tsconfigPaths: true,
+  },
   build: {
     rollupOptions: {
       output: {
