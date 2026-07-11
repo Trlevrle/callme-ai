@@ -60,11 +60,22 @@ function enforceRateLimit(event: Parameters<typeof defineEventHandler>[0]) {
   bucket.count += 1;
 }
 
-function normalizeModel(model?: string) {
+function normalizeOpenRouterModel(model?: string) {
   if (!model) return "openai/gpt-4.1-mini";
   if (model.includes("/") || model.includes(":")) return model;
   return `openai/${model}`;
 }
+
+type ChatProvider = "openrouter" | "ohapi";
+
+type ProviderAttempt = {
+  provider: ChatProvider;
+  model: string;
+  key?: string;
+  mode: "safe" | "nsfw";
+  baseUrl: string;
+  path: string;
+};
 
 function looksNsfw(text: string) {
   return /\b(sex|sexual|nude|nudity|explicit|porn|erotic|fetish|bdsm|kinky|horny|nsfw|xxx|strip|masturbat|bondage)\b/i.test(
@@ -118,6 +129,77 @@ async function fetchWithTimeout(url: string, init: RequestInit, timeoutMs = 2000
   } finally {
     clearTimeout(timeoutHandle);
   }
+}
+
+function normalizePath(rawPath: string) {
+  if (rawPath.startsWith("/")) {
+    return rawPath;
+  }
+
+  return `/${rawPath}`;
+}
+
+function buildHeaders(
+  provider: ChatProvider,
+  key: string,
+  referer: string,
+): Record<string, string> {
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${key}`,
+  };
+
+  if (provider === "openrouter") {
+    headers["HTTP-Referer"] = referer;
+    headers["X-Title"] = "Call Me AI";
+  }
+
+  return headers;
+}
+
+function buildRequestBody(
+  provider: ChatProvider,
+  model: string,
+  messages: Array<{ role?: string; content?: string }>,
+  maxTokens: number,
+) {
+  const normalizedModel = provider === "openrouter" ? normalizeOpenRouterModel(model) : model;
+
+  return {
+    model: normalizedModel,
+    messages,
+    max_tokens: maxTokens,
+    temperature: 0.8,
+  };
+}
+
+function extractAssistantText(payload: unknown) {
+  const data = payload as {
+    choices?: Array<{ message?: { content?: string | Array<{ text?: string }> } }>;
+    output_text?: string;
+  };
+
+  const content = data?.choices?.[0]?.message?.content;
+  if (typeof content === "string") {
+    return content.trim();
+  }
+
+  if (Array.isArray(content)) {
+    const text = content
+      .map((part) => (typeof part?.text === "string" ? part.text : ""))
+      .join("")
+      .trim();
+
+    if (text) {
+      return text;
+    }
+  }
+
+  if (typeof data?.output_text === "string") {
+    return data.output_text.trim();
+  }
+
+  return "";
 }
 
 export default defineEventHandler(async (event) => {
@@ -198,9 +280,33 @@ export default defineEventHandler(async (event) => {
     "VITE_OPENROUTER_API_KEY",
     "OPENROUTER_API_KEY",
   );
-  const baseUrl = (
+  const openRouterBaseUrl = (
     getEnvValue("VITE_OPENROUTER_BASE_URL", "OPENROUTER_BASE_URL") || "https://openrouter.ai/api/v1"
   ).replace(/\/$/, "");
+  const openRouterPath = "/chat/completions";
+
+  // OHApi stays wired in as NSFW provider #1. If its key is empty, it is skipped and
+  // the next configured NSFW provider automatically takes the first active position.
+  const ohApiBaseUrl = (
+    getEnvValue("VITE_OHAPI_BASE_URL", "OHAPI_BASE_URL") || "https://api.oh.xyz/v1"
+  ).replace(/\/$/, "");
+  const ohApiPath = normalizePath(
+    getEnvValue("VITE_OHAPI_CHAT_PATH", "OHAPI_CHAT_PATH") || "/chat/completions",
+  );
+  const ohApiNsfwModel = getEnvValue("VITE_OHAPI_NSFW_MODEL", "OHAPI_NSFW_MODEL") || "gpt-4o-mini";
+  const ohApiNsfwModelFallback = getEnvValue(
+    "VITE_OHAPI_NSFW_MODEL_FALLBACK",
+    "OHAPI_NSFW_MODEL_FALLBACK",
+  );
+  const ohApiKey = getEnvValue("VITE_OHAPI_API_KEY", "OHAPI_API_KEY");
+  const ohApiKeyFallback = getEnvValue(
+    "VITE_OHAPI_API_KEY_FALLBACK",
+    "OHAPI_API_KEY_FALLBACK",
+    "VITE_OHAPI_API_KEY",
+    "OHAPI_API_KEY",
+  );
+  const referer =
+    getEnvValue("PUBLIC_URL", "VITE_PUBLIC_URL", "SITE_URL") || "http://localhost:3000";
 
   const shouldPreferNsfw = mode === "nsfw" || (allowNsfwFallback && requestLooksNsfw);
   const safeModels = Array.from(
@@ -210,36 +316,55 @@ export default defineEventHandler(async (event) => {
     new Set([nsfwModel, nsfwModelFallback].filter(Boolean)),
   ) as string[];
 
-  const attempts: Array<{ model: string; key?: string; mode: "safe" | "nsfw" }> = [];
+  const ohApiNsfwModels = Array.from(
+    new Set([ohApiNsfwModel, ohApiNsfwModelFallback].filter(Boolean)),
+  ) as string[];
 
-  if (shouldPreferNsfw) {
+  const attempts: ProviderAttempt[] = [];
+
+  function appendNsfwAttempts() {
+    for (let index = 0; index < ohApiNsfwModels.length; index += 1) {
+      const modelName = ohApiNsfwModels[index];
+      attempts.push({
+        provider: "ohapi",
+        model: modelName,
+        key: index === 0 ? ohApiKey : ohApiKeyFallback,
+        mode: "nsfw",
+        baseUrl: ohApiBaseUrl,
+        path: ohApiPath,
+      });
+    }
+
     for (let index = 0; index < nsfwModels.length; index += 1) {
       const modelName = nsfwModels[index];
       attempts.push({
+        provider: "openrouter",
         model: modelName,
         key: index === 0 ? nsfwKey : nsfwKeyFallback,
         mode: "nsfw",
+        baseUrl: openRouterBaseUrl,
+        path: openRouterPath,
       });
     }
+  }
+
+  if (shouldPreferNsfw) {
+    appendNsfwAttempts();
   } else {
     for (let index = 0; index < safeModels.length; index += 1) {
       const modelName = safeModels[index];
       attempts.push({
+        provider: "openrouter",
         model: modelName,
         key: index === 0 ? safeKey : safeKeyFallback,
         mode: "safe",
+        baseUrl: openRouterBaseUrl,
+        path: openRouterPath,
       });
     }
 
     if (allowNsfwFallback) {
-      for (let index = 0; index < nsfwModels.length; index += 1) {
-        const modelName = nsfwModels[index];
-        attempts.push({
-          model: modelName,
-          key: index === 0 ? nsfwKey : nsfwKeyFallback,
-          mode: "nsfw",
-        });
-      }
+      appendNsfwAttempts();
     }
   }
 
@@ -250,35 +375,35 @@ export default defineEventHandler(async (event) => {
     try {
       const resolvedKey = attempt.key;
       if (!resolvedKey) {
-        throw new Error("The chat service is not configured yet.");
+        logEvent("info", "provider-skipped-missing-key", {
+          provider: attempt.provider,
+          mode: attempt.mode,
+          model: attempt.model,
+        });
+        continue;
       }
 
-      const response = await fetchWithTimeout(`${baseUrl}/chat/completions`, {
+      const response = await fetchWithTimeout(`${attempt.baseUrl}${normalizePath(attempt.path)}`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${resolvedKey}`,
-          "HTTP-Referer":
-            getEnvValue("PUBLIC_URL", "VITE_PUBLIC_URL", "SITE_URL") || "http://localhost:3000",
-          "X-Title": "Call Me AI",
-        },
-        body: JSON.stringify({
-          model: normalizeModel(attempt.model),
-          messages,
-          max_tokens: body?.maxTokens ?? 400,
-          temperature: 0.8,
-        }),
+        headers: buildHeaders(attempt.provider, resolvedKey, referer),
+        body: JSON.stringify(
+          buildRequestBody(attempt.provider, attempt.model, messages, body?.maxTokens ?? 400),
+        ),
       });
 
       const payload = await response.json();
-      const text = payload?.choices?.[0]?.message?.content?.trim();
+      const text = extractAssistantText(payload);
 
       if (!text) {
         throw new Error("The assistant didn’t return a reply.");
       }
 
       logEvent("info", "request-success", {
-        model: normalizeModel(attempt.model),
+        provider: attempt.provider,
+        model:
+          attempt.provider === "openrouter"
+            ? normalizeOpenRouterModel(attempt.model)
+            : attempt.model,
         mode: attempt.mode,
       });
 
@@ -286,7 +411,11 @@ export default defineEventHandler(async (event) => {
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "unknown";
       logEvent("warn", "model-attempt-failed", {
-        model: normalizeModel(attempt.model),
+        provider: attempt.provider,
+        model:
+          attempt.provider === "openrouter"
+            ? normalizeOpenRouterModel(attempt.model)
+            : attempt.model,
         mode: attempt.mode,
         message: errorMessage,
       });
@@ -300,6 +429,10 @@ export default defineEventHandler(async (event) => {
 
       lastError = error instanceof Error ? error : new Error("The assistant hit a snag.");
     }
+  }
+
+  if (!lastError) {
+    lastError = new Error("The chat service is not configured yet.");
   }
 
   throw createError({
